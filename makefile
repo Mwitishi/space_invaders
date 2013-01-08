@@ -1,25 +1,28 @@
 CC=gcc
-CFLAGS=-c -Wall
-SDLFLAGS=-lSDL_main -lSDL -lSDL_image
+WIN_CC=i586-mingw32msvc-gcc
+CFLAGS=-Wall
+WIN_CFLAGS=-Wall -lmingw32
+SDLFLAGS=-lSDLmain -lSDL -lSDL_image
 
 SOURCEDIR=.
-OBJDIR=../obj
 BINDIR=../bin
 
 CSOURCE=space_invaders.c
 INDIR_CSOURCE=$(addprefix $(SOURCEDIR)/,$(CSOURCE))
-COBJ=$(CSOURCE:.c=.o)
-INDIR_COBJ=$(addprefix $(OBJDIR)/,$(COBJ))
+CHEADER=space_invaders.h
+INDIR_CHEADER=$(addprefix $(SOURCEDIR)/,$(CHEADER))
 BIN=space_invaders
+EXE=space_invaders.exe
 
 all: $(BINDIR)/$(BIN)
 
-$(BINDIR)/$(BIN): $(INDIR_COBJ)
-	$(CC) $(INDIR_COBJ) -o $(BINDIR)/$(BIN)
+$(BINDIR)/$(BIN): $(INDIR_CSOURCE) $(INDIR_CHEADER)
+	$(CC) $(CFLAGS) $(INDIR_CSOURCE) -o $(BINDIR)/$(BIN) $(SDLFLAGS)
 
-$(INDIR_COBJ): $(INDIR_CSOURCE)
-	$(CC) $(CFLAGS) $(SDLFLAGS) $(INDIR_CSOURCE)
-	mv *.o $(OBJDIR)
+win: $(BINDIR)/$(EXE)
+
+$(BINDIR)/$(EXE): $(INDIR_CSOURCE) $(INDIR_CHEADER)
+	$(WIN_CC) $(WIN_CFLAGS) $(INDIR_CSOURCE) -o $(BINDIR)/$(EXE) $(SDLFLAGS)
 
 clean:
-	rm $(OBJDIR)/*.o $(BINDIR)/$(BIN)
+	rm -f $(BINDIR)/$(BIN) $(BINDIR)/$(EXE)
