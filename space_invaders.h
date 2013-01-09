@@ -12,11 +12,19 @@
 #define SPACE_INVADERS_IMGFOLDER "imgs/"
 
 #define SPACE_INVADERS_ENEMY_IMGS "space_invaders_enemy.png"
+#define SPACE_INVADERS_PLAYER_IMGS "space_invaders_player.png"
+
+#define SPACE_INVADERS_ENEMY_QUAN 1
+#define SPACE_INVADERS_HEALTH_COLOR SDL_MapRGB(screen->format,0,0xff,0)
 
 //Structure for storing entities like the player or the enemies
 struct si_entity{
+    int vx;
+    int vy;
+    int health;
     SDL_Rect box;
     SDL_Rect lastbox;
+    SDL_Surface *img;
 };
 
 //Declare global variables as extern
@@ -25,10 +33,13 @@ struct si_entity{
 
 extern SDL_Surface *screen;
 extern SDL_Surface *img_enemy;
+extern SDL_Surface *img_player;
+extern int tick;
 
 #endif
 
 //space_invaders_entity.c function declarations
-
+struct si_entity si_entity_mk(SDL_Rect,SDL_Surface*);
+void si_entity_draw(struct si_entity*);
 
 #endif
