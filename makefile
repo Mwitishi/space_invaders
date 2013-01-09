@@ -7,7 +7,7 @@ SDLFLAGS=-lSDLmain -lSDL -lSDL_image
 SOURCEDIR=.
 BINDIR=../bin
 
-CSOURCE=space_invaders.c
+CSOURCE=space_invaders.c space_invaders_entity.c
 INDIR_CSOURCE=$(addprefix $(SOURCEDIR)/,$(CSOURCE))
 CHEADER=space_invaders.h
 INDIR_CHEADER=$(addprefix $(SOURCEDIR)/,$(CHEADER))
