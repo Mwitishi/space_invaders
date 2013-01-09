@@ -7,6 +7,8 @@ struct si_entity si_entity_mk(SDL_Rect box,SDL_Surface *img)
     ent.box=box;
     ent.img=img;
     ent.lastbox=ent.box;
+    ent.vx=0;
+    ent.vy=0;
 
     return ent;
 }

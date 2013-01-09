@@ -12,6 +12,7 @@ int tick=0;
 
 int main(int argc,char **argv)
 {
+    int i1;
     uint32_t t1;
     char *str1=NULL;
     SDL_Event e1;
@@ -21,7 +22,7 @@ int main(int argc,char **argv)
     printf("%s %s\n",SPACE_INVADERS_NAME,SPACE_INVADERS_VERSION);
 
     SDL_Init(SDL_INIT_EVERYTHING);
-    screen=SDL_SetVideoMode(640,480,32,SDL_SWSURFACE);
+    screen=SDL_SetVideoMode(320,320,32,SDL_SWSURFACE);
     str1=(char*)malloc(strlen(SPACE_INVADERS_IMGFOLDER)+strlen(SPACE_INVADERS_ENEMY_IMGS)+1);
     sprintf(str1,"%s%s",SPACE_INVADERS_IMGFOLDER,SPACE_INVADERS_ENEMY_IMGS);
     printf("Opening image %s\n",str1);
@@ -36,11 +37,24 @@ int main(int argc,char **argv)
     if(img_player==NULL)
         printf("Loaded image = NULL\n");
 
+    player=(struct si_entity*)malloc(sizeof(struct si_entity));
+    r1.x=152;
+    r1.y=280;
     r1.w=16;
     r1.h=16;
+    *player=si_entity_mk(r1,img_player);
+
+    enemies=(struct si_entity*)malloc(sizeof(struct si_entity)*SPACE_INVADERS_ENEMY_QUAN);
+    for(i1=0;i1<SPACE_INVADERS_ENEMY_QUAN;i1++)
+    {
+        r1.x=152;
+        r1.y=40;
+        enemies[i1]=si_entity_mk(r1,img_enemy);
+    }
+
     r1.x=100;
     r1.y=100;
-    ent1=si_entity_mk(r1,img_player);
+    ent1=si_entity_mk(r1,img_enemy);
 
     //Main loop
     while(1)
@@ -52,11 +66,29 @@ int main(int argc,char **argv)
         {
             if(e1.type==SDL_QUIT)
                 goto end;
+
+            if(e1.type==SDL_KEYDOWN)
+            {
+                if(e1.key.keysym.sym==SDLK_LEFT)
+                    (*player).vx-=3;
+                if(e1.key.keysym.sym==SDLK_RIGHT)
+                    (*player).vx+=3;
+            }
+
+            if(e1.type==SDL_KEYUP)
+            {
+                if(e1.key.keysym.sym==SDLK_LEFT)
+                    (*player).vx+=3;
+                if(e1.key.keysym.sym==SDLK_RIGHT)
+                    (*player).vx-=3;
+            }
         }
 
-        ent1.box.x++;
+        (*player).box.x+=(*player).vx;
 
-        si_entity_draw(&ent1);
+        si_entity_draw(player);
+        for(i1=0;i1<SPACE_INVADERS_ENEMY_QUAN;i1++)
+            si_entity_draw(enemies+i1);
 
         tick=(tick+1)%4;
         while(SDL_GetTicks()-t1<200);

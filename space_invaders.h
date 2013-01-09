@@ -15,13 +15,11 @@
 #define SPACE_INVADERS_PLAYER_IMGS "space_invaders_player.png"
 
 #define SPACE_INVADERS_ENEMY_QUAN 1
-#define SPACE_INVADERS_HEALTH_COLOR SDL_MapRGB(screen->format,0,0xff,0)
 
 //Structure for storing entities like the player or the enemies
 struct si_entity{
     int vx;
     int vy;
-    int health;
     SDL_Rect box;
     SDL_Rect lastbox;
     SDL_Surface *img;
