@@ -6,18 +6,45 @@
 SDL_Surface *screen=NULL;
 SDL_Surface *img_enemy=NULL;
 SDL_Surface *img_player=NULL;
-struct si_entity *player;
-struct si_entity *enemies;
+struct si_entity *player=NULL;
+struct si_entity **enemies=NULL;
 int tick=0;
+
+int space_invaders_event()
+{
+    SDL_Event e1;
+
+    while(SDL_PollEvent(&e1))
+    {
+        if(e1.type==SDL_QUIT)
+            return 1;
+
+        if(e1.type==SDL_KEYDOWN)
+        {
+            if(e1.key.keysym.sym==SDLK_LEFT)
+                (*player).vx-=SPACE_INVADERS_PLAYER_V;
+            if(e1.key.keysym.sym==SDLK_RIGHT)
+                (*player).vx+=SPACE_INVADERS_PLAYER_V;
+        }
+
+        if(e1.type==SDL_KEYUP)
+        {
+            if(e1.key.keysym.sym==SDLK_LEFT)
+                (*player).vx+=SPACE_INVADERS_PLAYER_V;
+            if(e1.key.keysym.sym==SDLK_RIGHT)
+                (*player).vx-=SPACE_INVADERS_PLAYER_V;
+        }
+    }
+
+    return 0;
+}
 
 int main(int argc,char **argv)
 {
     int i1;
     uint32_t t1;
     char *str1=NULL;
-    SDL_Event e1;
     SDL_Rect r1;
-    struct si_entity ent1;
 
     printf("%s %s\n",SPACE_INVADERS_NAME,SPACE_INVADERS_VERSION);
 
@@ -42,56 +69,33 @@ int main(int argc,char **argv)
     r1.y=280;
     r1.w=16;
     r1.h=16;
-    *player=si_entity_mk(r1,img_player);
+    *player=si_entity_mk(r1,img_player,SPACE_INVADERS_PLAYER_TPF,SPACE_INVADERS_PLAYER_FQUAN);
 
-    enemies=(struct si_entity*)malloc(sizeof(struct si_entity)*SPACE_INVADERS_ENEMY_QUAN);
+    enemies=(struct si_entity**)malloc(sizeof(struct si_entity*)*SPACE_INVADERS_ENEMY_QUAN);
     for(i1=0;i1<SPACE_INVADERS_ENEMY_QUAN;i1++)
     {
+        enemies[i1]=(struct si_entity*)malloc(sizeof(struct si_entity));
         r1.x=152;
         r1.y=40;
-        enemies[i1]=si_entity_mk(r1,img_enemy);
+        *(enemies[i1])=si_entity_mk(r1,img_enemy,SPACE_INVADERS_ENEMY_TPF,SPACE_INVADERS_ENEMY_FQUAN);
     }
-
-    r1.x=100;
-    r1.y=100;
-    ent1=si_entity_mk(r1,img_enemy);
 
     //Main loop
     while(1)
     {
         t1=SDL_GetTicks();
 
-        //Event loop, process events
-        while(SDL_PollEvent(&e1))
-        {
-            if(e1.type==SDL_QUIT)
-                goto end;
-
-            if(e1.type==SDL_KEYDOWN)
-            {
-                if(e1.key.keysym.sym==SDLK_LEFT)
-                    (*player).vx-=3;
-                if(e1.key.keysym.sym==SDLK_RIGHT)
-                    (*player).vx+=3;
-            }
-
-            if(e1.type==SDL_KEYUP)
-            {
-                if(e1.key.keysym.sym==SDLK_LEFT)
-                    (*player).vx+=3;
-                if(e1.key.keysym.sym==SDLK_RIGHT)
-                    (*player).vx-=3;
-            }
-        }
+        if(space_invaders_event()==1)
+            goto end;
 
         (*player).box.x+=(*player).vx;
 
         si_entity_draw(player);
         for(i1=0;i1<SPACE_INVADERS_ENEMY_QUAN;i1++)
-            si_entity_draw(enemies+i1);
+            si_entity_draw(enemies[i1]);
 
-        tick=(tick+1)%4;
-        while(SDL_GetTicks()-t1<200);
+        tick=(tick+1)%SPACE_INVADERS_TICK_RESET;
+        while(SDL_GetTicks()-t1<SPACE_INVADERS_TICK_MS);
     }
 
 end:
