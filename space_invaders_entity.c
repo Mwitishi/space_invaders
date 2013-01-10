@@ -26,7 +26,6 @@ void si_entity_draw(struct si_entity *ent)
 
     SDL_FillRect(screen,&(ent->lastbox),SDL_MapRGB(screen->format,0,0,0));
     SDL_BlitSurface(ent->img,&getbox,screen,&(ent->box));
-    SDL_Flip(screen);
 
     ent->lastbox=ent->box;
 }
