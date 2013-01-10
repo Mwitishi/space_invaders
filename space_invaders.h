@@ -2,37 +2,39 @@
 #define SPACE_INVADERS_H
 
 #include <stdio.h>
-#include <time.h>
 #include "SDL/SDL.h"
 #include "SDL/SDL_image.h"
 
+//Name and version
 #define SPACE_INVADERS_NAME "Space Invaders by Mwitishi"
 #define SPACE_INVADERS_VERSION "v0.0"
 
+//Folder for storing images
 #define SPACE_INVADERS_IMGFOLDER "imgs/"
 
+//Image names (no path)
 #define SPACE_INVADERS_ENEMY_IMGS "space_invaders_enemy.png"
 #define SPACE_INVADERS_PLAYER_IMGS "space_invaders_player.png"
 
-#define SPACE_INVADERS_TICK_RESET 8
-#define SPACE_INVADERS_TICK_MS 100
-#define SPACE_INVADERS_ENEMY_QUAN 1
-#define SPACE_INVADERS_PLAYER_V 3
-#define SPACE_INVADERS_ENEMY_V 2
-#define SPACE_INVADERS_PLAYER_TPF 2
+#define SPACE_INVADERS_TICK_RESET 8//Maximum value for tick
+#define SPACE_INVADERS_TICK_MS 100//Milliseconds per tick (1s=1000ms)
+#define SPACE_INVADERS_ENEMY_QUAN 1//Amount of enemies spawned
+#define SPACE_INVADERS_PLAYER_V 3//Player speed
+#define SPACE_INVADERS_ENEMY_V 2//Enemy speed
+#define SPACE_INVADERS_PLAYER_TPF 2//Ticks per frame, higher->slower animation
 #define SPACE_INVADERS_ENEMY_TPF 2
-#define SPACE_INVADERS_PLAYER_FQUAN 4
+#define SPACE_INVADERS_PLAYER_FQUAN 4//Amount of frames of the animation
 #define SPACE_INVADERS_ENEMY_FQUAN 4
 
 //Structure for storing entities like the player or the enemies
 struct si_entity{
-    int vx;
-    int vy;
-    int tpf;
-    int fquan;
-    SDL_Rect box;
-    SDL_Rect lastbox;
-    SDL_Surface *img;
+    int vx;//Horizontal speed
+    int vy;//Vertical speed
+    int tpf;//Ticks per frame
+    int fquan;//Frame amount
+    SDL_Rect box;//Current entity position
+    SDL_Rect lastbox;//Last drawn position (it's cleared in each screen update)
+    SDL_Surface *img;//Entity image
 };
 
 //Declare global variables as extern

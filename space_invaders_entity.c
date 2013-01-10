@@ -1,5 +1,6 @@
 #include "space_invaders.h"
 
+//Make a si_entity with specified parameters (like class constructor)
 struct si_entity si_entity_mk(SDL_Rect box,SDL_Surface *img,int tpf,int fquan)
 {
     struct si_entity ent;
@@ -15,17 +16,21 @@ struct si_entity si_entity_mk(SDL_Rect box,SDL_Surface *img,int tpf,int fquan)
     return ent;
 }
 
+//Draw specified entity on screen
 void si_entity_draw(struct si_entity *ent)
 {
     SDL_Rect getbox;
 
+    //Set box to retrieve from image
     getbox.x=((tick/ent->tpf)%(ent->fquan))*ent->box.w;
     getbox.y=0;
     getbox.w=ent->box.w;
     getbox.h=ent->box.h;
 
+    //Clean previous position, draw at new position
     SDL_FillRect(screen,&(ent->lastbox),SDL_MapRGB(screen->format,0,0,0));
     SDL_BlitSurface(ent->img,&getbox,screen,&(ent->box));
 
+    //Set lastbox
     ent->lastbox=ent->box;
 }

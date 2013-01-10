@@ -14,23 +14,31 @@ int space_invaders_event()
 {
     SDL_Event e1;
 
+    //Loop through all events in the queue
     while(SDL_PollEvent(&e1))
     {
+        //Window closing attempt
         if(e1.type==SDL_QUIT)
             return 1;
 
+        //Pressed key
         if(e1.type==SDL_KEYDOWN)
         {
+            //Left pressed, set vx to left
             if(e1.key.keysym.sym==SDLK_LEFT)
                 (*player).vx-=SPACE_INVADERS_PLAYER_V;
+            //Right pressed, set vx to right
             if(e1.key.keysym.sym==SDLK_RIGHT)
                 (*player).vx+=SPACE_INVADERS_PLAYER_V;
         }
 
+        //Released key
         if(e1.type==SDL_KEYUP)
         {
+            //Left released, set vx to right
             if(e1.key.keysym.sym==SDLK_LEFT)
                 (*player).vx+=SPACE_INVADERS_PLAYER_V;
+            //Right released, set vx to left
             if(e1.key.keysym.sym==SDLK_RIGHT)
                 (*player).vx-=SPACE_INVADERS_PLAYER_V;
         }
@@ -43,10 +51,12 @@ int space_invaders_draw()
 {
     int i1;
 
+    //Draw entities
     si_entity_draw(player);
     for(i1=0;i1<SPACE_INVADERS_ENEMY_QUAN;i1++)
         si_entity_draw(enemies[i1]);
 
+    //Update screen
     SDL_Flip(screen);
 
     return 0;
