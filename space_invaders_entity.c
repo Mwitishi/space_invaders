@@ -34,3 +34,13 @@ void si_entity_draw(struct si_entity *ent)
     //Set lastbox
     ent->lastbox=ent->box;
 }
+
+int si_entity_collide(struct si_entity *ent1,struct si_entity *ent2)
+{
+    if(ent1->box.x>ent2->box.x+ent2->box.w) return 0;
+    if(ent2->box.x>ent1->box.x+ent1->box.w) return 0;
+    if(ent1->box.y>ent2->box.y+ent2->box.h) return 0;
+    if(ent2->box.y>ent1->box.y+ent1->box.h) return 0;
+
+    return 1;
+}

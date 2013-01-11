@@ -8,6 +8,7 @@ SDL_Surface *img_enemy=NULL;
 SDL_Surface *img_player=NULL;
 struct si_entity *player=NULL;
 struct si_entity **enemies=NULL;
+struct si_entity **shots=NULL;
 int tick=0;
 
 int space_invaders_event()
@@ -58,6 +59,15 @@ int space_invaders_draw()
 
     //Update screen
     SDL_Flip(screen);
+
+    return 0;
+}
+
+int space_invaders_collide()
+{
+    int i1;
+
+    
 
     return 0;
 }
