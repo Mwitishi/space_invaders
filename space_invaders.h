@@ -15,9 +15,14 @@
 //Image names (no path)
 #define SPACE_INVADERS_ENEMY_IMGS "space_invaders_enemy.png"
 #define SPACE_INVADERS_PLAYER_IMGS "space_invaders_player.png"
+#define SPACE_INVADERS_SHOT_IMGS "space_invaders_shot.png"
 
 #define SPACE_INVADERS_TICK_RESET 8//Maximum value for tick
 #define SPACE_INVADERS_TICK_MS 100//Milliseconds per tick (1s=1000ms)
+#define SPACE_INVADERS_PLAYER_SIZE 16//Entity size
+#define SPACE_INVADERS_ENEMY_SIZE 16
+#define SPACE_INVADERS_SHOT_W 2
+#define SPACE_INVADERS_SHOT_H 6
 #define SPACE_INVADERS_ENEMY_QUAN 1//Amount of enemies spawned
 #define SPACE_INVADERS_SHOT_QUAN 5//Amount of shots simultaneously possible
 #define SPACE_INVADERS_PLAYER_V 3//Player speed

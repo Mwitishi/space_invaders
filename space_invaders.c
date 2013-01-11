@@ -6,6 +6,7 @@
 SDL_Surface *screen=NULL;
 SDL_Surface *img_enemy=NULL;
 SDL_Surface *img_player=NULL;
+SDL_Surface *img_shot=NULL;
 struct si_entity *player=NULL;
 struct si_entity **enemies=NULL;
 struct si_entity **shots=NULL;
@@ -63,6 +64,21 @@ int space_invaders_draw()
     return 0;
 }
 
+int space_invaders_move()
+{
+    int i1;
+
+    (*player).box.x+=(*player).vx;
+    (*player).box.y+=(*player).vy;
+    for(i1=0;i1<SPACE_INVADERS_ENEMY_QUAN;i1++)
+    {
+        (*(enemies[i1])).box.x+=(*(enemies[i1])).vx;
+        (*(enemies[i1])).box.y+=(*(enemies[i1])).vy;
+    }
+
+    return 0;
+}
+
 int space_invaders_collide()
 {
     int i1;
@@ -102,22 +118,39 @@ int main(int argc,char **argv)
     if(img_player==NULL)
         printf("Loaded image = NULL\n");
 
+    //Load shot image
+    str1=(char*)malloc(strlen(SPACE_INVADERS_IMGFOLDER)+strlen(SPACE_INVADERS_SHOT_IMGS)+1);
+    sprintf(str1,"%s%s",SPACE_INVADERS_IMGFOLDER,SPACE_INVADERS_SHOT_IMGS);
+    printf("Opening image %s\n",str1);
+    img_shot=IMG_Load(str1);
+    if(img_shot==NULL)
+        printf("Loaded image = NULL\n");
+
     //Create player structure
     player=(struct si_entity*)malloc(sizeof(struct si_entity));
     r1.x=152;
     r1.y=280;
-    r1.w=16;
-    r1.h=16;
+    r1.w=SPACE_INVADERS_PLAYER_SIZE;
+    r1.h=SPACE_INVADERS_PLAYER_SIZE;
     *player=si_entity_mk(r1,img_player,SPACE_INVADERS_PLAYER_TPF,SPACE_INVADERS_PLAYER_FQUAN);
 
     //Create enemy structures
+    r1.w=SPACE_INVADERS_ENEMY_SIZE;
+    r1.h=SPACE_INVADERS_ENEMY_SIZE;
     enemies=(struct si_entity**)malloc(sizeof(struct si_entity*)*SPACE_INVADERS_ENEMY_QUAN);
     for(i1=0;i1<SPACE_INVADERS_ENEMY_QUAN;i1++)
     {
         enemies[i1]=(struct si_entity*)malloc(sizeof(struct si_entity));
-        r1.x=152;
+        r1.x=100+32*i1;
         r1.y=40;
         *(enemies[i1])=si_entity_mk(r1,img_enemy,SPACE_INVADERS_ENEMY_TPF,SPACE_INVADERS_ENEMY_FQUAN);
+    }
+
+    //Create shot array
+    shots=(struct si_entity**)malloc(sizeof(struct si_entity*)*SPACE_INVADERS_SHOT_QUAN);
+    for(i1=0;i1<SPACE_INVADERS_SHOT_QUAN;i1++)
+    {
+        shots[i1]=NULL;
     }
 
     //Main loop
@@ -130,8 +163,8 @@ int main(int argc,char **argv)
         if(space_invaders_event()==1)
             goto end;
 
-        //Update player position
-        (*player).box.x+=(*player).vx;
+        //Update entity position
+        space_invaders_move();
 
         //Draw screen
         space_invaders_draw();
@@ -143,6 +176,29 @@ int main(int argc,char **argv)
 
     //Release stuff
 end:
+    if(player!=NULL)
+    {
+        free(player);
+        player=NULL;
+    }
+    for(i1=0;i1<SPACE_INVADERS_ENEMY_QUAN;i1++)
+    {
+        if(enemies[i1]==NULL) continue;
+        free(enemies[i1]);
+        enemies[i1]=NULL;
+    }
+    free(enemies);
+    enemies=NULL;
+    for(i1=0;i1<SPACE_INVADERS_SHOT_QUAN;i1++)
+    {
+        if(shots[i1]==NULL) continue;
+        free(shots[i1]);
+        shots[i1]=NULL;
+    }
+    free(shots);
+    shots=NULL;
+
+    SDL_FreeSurface(img_shot);
     SDL_FreeSurface(img_player);
     SDL_FreeSurface(img_enemy);
     SDL_FreeSurface(screen);

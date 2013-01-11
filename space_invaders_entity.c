@@ -21,6 +21,9 @@ void si_entity_draw(struct si_entity *ent)
 {
     SDL_Rect getbox;
 
+    if(ent==NULL)
+        return;
+
     //Set box to retrieve from image
     getbox.x=((tick/ent->tpf)%(ent->fquan))*ent->box.w;
     getbox.y=0;
@@ -37,6 +40,7 @@ void si_entity_draw(struct si_entity *ent)
 
 int si_entity_collide(struct si_entity *ent1,struct si_entity *ent2)
 {
+    if(ent1==NULL||ent2==NULL) return 0;
     if(ent1->box.x>ent2->box.x+ent2->box.w) return 0;
     if(ent2->box.x>ent1->box.x+ent1->box.w) return 0;
     if(ent1->box.y>ent2->box.y+ent2->box.h) return 0;
