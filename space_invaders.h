@@ -19,12 +19,17 @@
 
 #define SPACE_INVADERS_TICK_RESET 8//Maximum value for tick
 #define SPACE_INVADERS_TICK_MS 100//Milliseconds per tick (1s=1000ms)
+#define SPACE_INVADERS_SCREEN_X 320//Screen size
+#define SPACE_INVADERS_SCREEN_Y 160
 #define SPACE_INVADERS_PLAYER_SIZE 16//Entity size
 #define SPACE_INVADERS_ENEMY_SIZE 16
 #define SPACE_INVADERS_SHOT_W 2
 #define SPACE_INVADERS_SHOT_H 6
+#define SPACE_INVADERS_LEFT_LIMIT 16//Limits of movement
+#define SPACE_INVADERS_RIGHT_LIMIT 304
 #define SPACE_INVADERS_ENEMY_QUAN 1//Amount of enemies spawned
 #define SPACE_INVADERS_SHOT_QUAN 5//Amount of shots simultaneously possible
+#define SPACE_INVADERS_ENEMY_COLS 5//Columns of enemy formation
 #define SPACE_INVADERS_PLAYER_V 3//Player speed
 #define SPACE_INVADERS_ENEMY_V 2//Enemy speed
 #define SPACE_INVADERS_SHOT_V 5//Shot speed

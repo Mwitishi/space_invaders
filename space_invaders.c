@@ -110,7 +110,12 @@ int space_invaders_move()
     {
         (*player).box.x+=(*player).vx;
         (*player).box.y+=(*player).vy;
+        if((*player).box.x<SPACE_INVADERS_LEFT_LIMIT)
+            (*player).box.x=SPACE_INVADERS_LEFT_LIMIT;
+        if((*player).box.x+SPACE_INVADERS_PLAYER_SIZE>SPACE_INVADERS_RIGHT_LIMIT)
+            (*player).box.x=SPACE_INVADERS_RIGHT_LIMIT-SPACE_INVADERS_PLAYER_SIZE;
     }
+
     for(i1=0;i1<SPACE_INVADERS_ENEMY_QUAN;i1++)
     {
         if(enemies[i1]==NULL)
@@ -168,7 +173,7 @@ int main(int argc,char **argv)
 
     //Init SDL, create screen
     SDL_Init(SDL_INIT_EVERYTHING);
-    screen=SDL_SetVideoMode(320,160,32,SDL_SWSURFACE);
+    screen=SDL_SetVideoMode(SPACE_INVADERS_SCREEN_X,SPACE_INVADERS_SCREEN_Y,32,SDL_SWSURFACE);
 
     //Load enemy image
     str1=(char*)malloc(strlen(SPACE_INVADERS_IMGFOLDER)+strlen(SPACE_INVADERS_ENEMY_IMGS)+1);
@@ -196,8 +201,8 @@ int main(int argc,char **argv)
 
     //Create player structure
     player=(struct si_entity*)malloc(sizeof(struct si_entity));
-    r1.x=152;
-    r1.y=128;
+    r1.x=(SPACE_INVADERS_SCREEN_X-SPACE_INVADERS_PLAYER_SIZE)/2;
+    r1.y=SPACE_INVADERS_SCREEN_Y-2*SPACE_INVADERS_PLAYER_SIZE;
     r1.w=SPACE_INVADERS_PLAYER_SIZE;
     r1.h=SPACE_INVADERS_PLAYER_SIZE;
     *player=si_entity_mk(r1,img_player,SPACE_INVADERS_PLAYER_TPF,SPACE_INVADERS_PLAYER_FQUAN);
@@ -209,8 +214,8 @@ int main(int argc,char **argv)
     for(i1=0;i1<SPACE_INVADERS_ENEMY_QUAN;i1++)
     {
         enemies[i1]=(struct si_entity*)malloc(sizeof(struct si_entity));
-        r1.x=48+32*i1;
-        r1.y=16;
+        r1.x=SPACE_INVADERS_ENEMY_SIZE*(2*i1+3);
+        r1.y=SPACE_INVADERS_ENEMY_SIZE;
         *(enemies[i1])=si_entity_mk(r1,img_enemy,SPACE_INVADERS_ENEMY_TPF,SPACE_INVADERS_ENEMY_FQUAN);
     }
 
@@ -248,22 +253,14 @@ int main(int argc,char **argv)
     //Release stuff
 end:
     si_entity_dispose(&player);
+
     for(i1=0;i1<SPACE_INVADERS_ENEMY_QUAN;i1++)
-    {
         si_entity_dispose(enemies+i1);
-/*        if(enemies[i1]==NULL) continue;
-        free(enemies[i1]);
-        enemies[i1]=NULL;*/
-    }
     free(enemies);
     enemies=NULL;
+
     for(i1=0;i1<SPACE_INVADERS_SHOT_QUAN;i1++)
-    {
         si_entity_dispose(shots+i1);
-/*        if(shots[i1]==NULL) continue;
-        free(shots[i1]);
-        shots[i1]=NULL;*/
-    }
     free(shots);
     shots=NULL;
 
