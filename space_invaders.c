@@ -11,6 +11,40 @@ struct si_entity *player=NULL;
 struct si_entity **enemies=NULL;
 struct si_entity **shots=NULL;
 int tick=0;
+int reload=0;
+
+int space_invaders_shoot()
+{
+    int i1;
+    SDL_Rect r1;
+
+    //If player is dead
+    if(player==NULL)
+        return 0;
+
+    //Get NULL shot pointer, return if it's full
+    for(i1=0;shots[i1]!=NULL&&i1<SPACE_INVADERS_SHOT_QUAN;i1++);
+    if(i1==SPACE_INVADERS_SHOT_QUAN) return 0;
+
+    //If reload is not done
+    if(reload!=0)
+        return 0;
+
+    r1.x=(*player).box.x+(SPACE_INVADERS_PLAYER_SIZE-SPACE_INVADERS_SHOT_W)/2;
+    r1.y=(*player).box.y-SPACE_INVADERS_SHOT_H;
+    r1.w=SPACE_INVADERS_SHOT_W;
+    r1.h=SPACE_INVADERS_SHOT_H;
+
+    shots[i1]=(struct si_entity*)malloc(sizeof(struct si_entity));
+    *(shots[i1])=si_entity_mk(r1,img_shot,SPACE_INVADERS_SHOT_TPF,SPACE_INVADERS_SHOT_FQUAN);
+    (*(shots[i1])).vy=-SPACE_INVADERS_SHOT_V;
+
+    printf("Shooting at position %d:%d",r1.x,r1.y);
+
+    reload=SPACE_INVADERS_SHOT_RELOAD;
+
+    return 0;
+}
 
 int space_invaders_event()
 {
@@ -32,6 +66,11 @@ int space_invaders_event()
             //Right pressed, set vx to right
             if(e1.key.keysym.sym==SDLK_RIGHT)
                 (*player).vx+=SPACE_INVADERS_PLAYER_V;
+            if(e1.key.keysym.sym==SDLK_SPACE)
+            {
+                space_invaders_shoot();
+                printf("Shoot\n");
+            }
         }
 
         //Released key
@@ -57,6 +96,8 @@ int space_invaders_draw()
     si_entity_draw(player);
     for(i1=0;i1<SPACE_INVADERS_ENEMY_QUAN;i1++)
         si_entity_draw(enemies[i1]);
+    for(i1=0;i1<SPACE_INVADERS_SHOT_QUAN;i1++)
+        si_entity_draw(shots[i1]);
 
     //Update screen
     SDL_Flip(screen);
@@ -68,12 +109,25 @@ int space_invaders_move()
 {
     int i1;
 
-    (*player).box.x+=(*player).vx;
-    (*player).box.y+=(*player).vy;
+    if(player!=NULL)
+    {
+        (*player).box.x+=(*player).vx;
+        (*player).box.y+=(*player).vy;
+    }
     for(i1=0;i1<SPACE_INVADERS_ENEMY_QUAN;i1++)
     {
+        if(enemies[i1]==NULL)
+            continue;
         (*(enemies[i1])).box.x+=(*(enemies[i1])).vx;
         (*(enemies[i1])).box.y+=(*(enemies[i1])).vy;
+    }
+
+    for(i1=0;i1<SPACE_INVADERS_SHOT_QUAN;i1++)
+    {
+        if(shots[i1]==NULL)
+            continue;
+        (*(shots[i1])).box.x+=(*(shots[i1])).vx;
+        (*(shots[i1])).box.y+=(*(shots[i1])).vy;
     }
 
     return 0;
@@ -81,9 +135,33 @@ int space_invaders_move()
 
 int space_invaders_collide()
 {
-    int i1;
+    int i1,i2;
 
-    
+    for(i1=0;i1<SPACE_INVADERS_SHOT_QUAN;i1++)
+    {
+        if(si_entity_collide(player,shots[i1]))
+        {
+            SDL_FillRect(screen,&((*(shots[i1])).lastbox),SDL_MapRGB(screen->format,0,0,0));
+            free(shots[i1]);
+            shots[i1]=NULL;
+            SDL_FillRect(screen,&((*player).lastbox),SDL_MapRGB(screen->format,0,0,0));
+            free(player);
+            player=NULL;
+        }
+
+        for(i2=0;i2<SPACE_INVADERS_ENEMY_QUAN;i2++)
+        {
+            if(si_entity_collide(enemies[i2],shots[i1]))
+            {
+                SDL_FillRect(screen,&((*(enemies[i2])).lastbox),SDL_MapRGB(screen->format,0,0,0));
+                free(enemies[i2]);
+                enemies[i2]=NULL;
+                SDL_FillRect(screen,&((*(shots[i1])).lastbox),SDL_MapRGB(screen->format,0,0,0));
+                free(shots[i1]);
+                shots[i1]=NULL;
+            }
+        }
+    }
 
     return 0;
 }
@@ -166,11 +244,14 @@ int main(int argc,char **argv)
         //Update entity position
         space_invaders_move();
 
+        space_invaders_collide();
+
         //Draw screen
         space_invaders_draw();
 
-        //Increase tick clock, wait until next tick
+        //Increase tick clock, decrease reload, wait until next tick
         tick=(tick+1)%SPACE_INVADERS_TICK_RESET;
+        if(reload!=0) reload--;
         while(SDL_GetTicks()-t1<SPACE_INVADERS_TICK_MS);
     }
 
