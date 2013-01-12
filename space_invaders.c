@@ -122,6 +122,13 @@ int space_invaders_move()
             continue;
         (*(enemies[i1])).box.x+=(*(enemies[i1])).vx;
         (*(enemies[i1])).box.y+=(*(enemies[i1])).vy;
+        if((*(enemies[i1])).box.x+SPACE_INVADERS_ENEMY_SIZE>SPACE_INVADERS_RIGHT_LIMIT||(*(enemies[i1])).box.x<SPACE_INVADERS_LEFT_LIMIT)
+        {
+            (*(enemies[i1])).box.x=SPACE_INVADERS_LEFT_LIMIT;
+            (*(enemies[i1])).box.y+=2*SPACE_INVADERS_ENEMY_SIZE;
+            if((*(enemies[i1])).box.y>=(*player).box.y)
+                si_entity_dispose(&player);
+        }
     }
 
     for(i1=0;i1<SPACE_INVADERS_SHOT_QUAN;i1++)
@@ -157,6 +164,18 @@ int space_invaders_collide()
             }
         }
     }
+
+    return 0;
+}
+
+int space_invaders_check()
+{
+    int i1;
+
+    for(i1=0;enemies[i1]==NULL&&i1<SPACE_INVADERS_ENEMY_QUAN;i1++);
+    if(i1==SPACE_INVADERS_ENEMY_QUAN) return 1;
+
+    if(player==NULL) return 2;
 
     return 0;
 }
@@ -214,17 +233,16 @@ int main(int argc,char **argv)
     for(i1=0;i1<SPACE_INVADERS_ENEMY_QUAN;i1++)
     {
         enemies[i1]=(struct si_entity*)malloc(sizeof(struct si_entity));
-        r1.x=SPACE_INVADERS_ENEMY_SIZE*(2*i1+3);
-        r1.y=SPACE_INVADERS_ENEMY_SIZE;
+        r1.x=SPACE_INVADERS_ENEMY_SIZE*(2*(i1%SPACE_INVADERS_ENEMY_COLS)+3);
+        r1.y=SPACE_INVADERS_ENEMY_SIZE*2*(i1/SPACE_INVADERS_ENEMY_COLS+1);
         *(enemies[i1])=si_entity_mk(r1,img_enemy,SPACE_INVADERS_ENEMY_TPF,SPACE_INVADERS_ENEMY_FQUAN);
+        (*(enemies[i1])).vx=SPACE_INVADERS_ENEMY_V;
     }
 
     //Create shot array
     shots=(struct si_entity**)malloc(sizeof(struct si_entity*)*SPACE_INVADERS_SHOT_QUAN);
     for(i1=0;i1<SPACE_INVADERS_SHOT_QUAN;i1++)
-    {
         shots[i1]=NULL;
-    }
 
     //Main loop
     while(1)
@@ -240,6 +258,14 @@ int main(int argc,char **argv)
         space_invaders_move();
 
         space_invaders_collide();
+
+        i1=space_invaders_check();
+        if(i1==1)
+            printf("You win!\n");
+        if(i1==2)
+            printf("You lose...\n");
+        if(i1!=0)
+            goto end;
 
         //Draw screen
         space_invaders_draw();

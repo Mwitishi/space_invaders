@@ -7,7 +7,7 @@
 
 //Name and version
 #define SPACE_INVADERS_NAME "Space Invaders by Mwitishi"
-#define SPACE_INVADERS_VERSION "v0.1"
+#define SPACE_INVADERS_VERSION "v0.2"
 
 //Folder for storing images
 #define SPACE_INVADERS_IMGFOLDER "imgs/"
@@ -27,9 +27,9 @@
 #define SPACE_INVADERS_SHOT_H 6
 #define SPACE_INVADERS_LEFT_LIMIT 16//Limits of movement
 #define SPACE_INVADERS_RIGHT_LIMIT 304
-#define SPACE_INVADERS_ENEMY_QUAN 1//Amount of enemies spawned
+#define SPACE_INVADERS_ENEMY_QUAN 14//Amount of enemies spawned
 #define SPACE_INVADERS_SHOT_QUAN 5//Amount of shots simultaneously possible
-#define SPACE_INVADERS_ENEMY_COLS 5//Columns of enemy formation
+#define SPACE_INVADERS_ENEMY_COLS 7//Columns of enemy formation
 #define SPACE_INVADERS_PLAYER_V 3//Player speed
 #define SPACE_INVADERS_ENEMY_V 2//Enemy speed
 #define SPACE_INVADERS_SHOT_V 5//Shot speed
