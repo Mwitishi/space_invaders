@@ -65,5 +65,6 @@ extern int tick;
 struct si_entity si_entity_mk(SDL_Rect,SDL_Surface*,int,int);
 void si_entity_draw(struct si_entity*);
 int si_entity_collide(struct si_entity*,struct si_entity*);
+void si_entity_dispose(struct si_entity**);
 
 #endif

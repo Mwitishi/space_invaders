@@ -48,3 +48,10 @@ int si_entity_collide(struct si_entity *ent1,struct si_entity *ent2)
 
     return 1;
 }
+
+void si_entity_dispose(struct si_entity **ent1)
+{
+    SDL_FillRect(screen,&((**ent1).lastbox),SDL_MapRGB(screen->format,0,0,0));
+    free(*ent1);
+    *ent1=NULL;
+}
