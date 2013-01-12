@@ -7,7 +7,7 @@
 
 //Name and version
 #define SPACE_INVADERS_NAME "Space Invaders by Mwitishi"
-#define SPACE_INVADERS_VERSION "v0.0"
+#define SPACE_INVADERS_VERSION "v0.1"
 
 //Folder for storing images
 #define SPACE_INVADERS_IMGFOLDER "imgs/"
@@ -34,7 +34,7 @@
 #define SPACE_INVADERS_PLAYER_FQUAN 4//Amount of frames of the animation
 #define SPACE_INVADERS_ENEMY_FQUAN 4
 #define SPACE_INVADERS_SHOT_FQUAN 2
-#define SPACE_INVADERS_SHOT_RELOAD 10//Amount of ticks between shots
+#define SPACE_INVADERS_SHOT_RELOAD 5//Amount of ticks between shots
 
 //Structure for storing entities like the player or the enemies
 struct si_entity{
